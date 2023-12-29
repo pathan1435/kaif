@@ -1,0 +1,48 @@
+service: myservice
+
+provider:
+  name: aws
+  runtime: go1.x
+
+
+
+package:
+  include:
+    - ./**
+    - ./bin/**
+
+functions:
+  hello:
+    handler: hello/main.go
+    timeout: 300
+    events:
+      - http:
+          path: hello
+          method: post
+
+  create_file:
+    handler: create_file/main.go
+    timeout: 300
+    events:
+      - http:
+          path: create_file/main.go
+          method: post
+ 
+
+resources:
+  Resources:
+    MyCmsDB:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        Engine: postgres
+        DBInstanceIdentifier: my-cms-db
+        MasterUsername: postgres
+        MasterUserPassword: "1434"
+        AllocatedStorage: "5"
+        DBInstanceClass: db.t2.micro
+        EngineVersion: "12.5"
+        PubliclyAccessible: true
+
+plugins:
+ 
+  - serverless-offline
